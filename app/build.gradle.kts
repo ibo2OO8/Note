@@ -39,7 +39,9 @@ android {
 dependencies {
     kapt("androidx.room:room-compiler:2.8.3")
     implementation(libs.androidx.room.runtime)
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4")
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4")
     // LiveData
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.9.4")
     // Lifecycle runtime (обязательно для работы LiveData)

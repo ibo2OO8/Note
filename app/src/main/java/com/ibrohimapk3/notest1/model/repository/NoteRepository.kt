@@ -11,7 +11,7 @@ class NoteRepository(private var dao: NoteDao) {
     fun getAllItem(): LiveData<List<NoteEntity>> {
         return dao.getAllItems()
     }
-    fun deleteItemByTitle(title:String){
+    suspend fun deleteItemByTitle(title:String){
         dao.deleteItemByTitle(title)
     }
 

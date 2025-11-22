@@ -14,5 +14,5 @@ interface NoteDao {
     fun getAllItems() : LiveData<List<NoteEntity>>
 
     @Query("Delete from items where title = :title")
-    fun deleteItemByTitle(title:String)
+    suspend fun deleteItemByTitle(title:String)
 }

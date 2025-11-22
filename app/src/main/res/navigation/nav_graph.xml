@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/addItemFragment"
+        android:name="com.ibrohimapk3.notest1.view.fragments.AddItemFragment"
+        android:label="fragment_add_item"
+        tools:layout="@layout/fragment_add_item" >
+
+        <action
+            android:id="@+id/action_addItemFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/infoAboutItemFragment"
+        android:name="com.ibrohimapk3.notest1.view.fragments.InfoAboutItemFragment"
+        android:label="fragment_info_about_item"
+        tools:layout="@layout/fragment_info_about_item">
+
+        <argument
+            android:name="title"
+            app:argType="string" />
+
+        <argument
+            android:name="content"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_infoAboutItemFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.ibrohimapk3.notest1.view.fragments.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main">
+
+        <action
+            android:id="@+id/action_mainFragment_to_addItemFragment"
+            app:destination="@id/addItemFragment" />
+
+        <action
+            android:id="@+id/action_mainFragment_to_infoAboutItemFragment"
+            app:destination="@id/infoAboutItemFragment" />
+    </fragment>
+
+</navigation>

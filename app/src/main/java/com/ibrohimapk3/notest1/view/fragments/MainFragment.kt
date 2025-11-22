@@ -1,60 +1,62 @@
 package com.ibrohimapk3.notest1.view.fragments
-
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.ibrohimapk3.notest1.R
+import com.ibrohimapk3.notest1.model.MainDb
+import com.ibrohimapk3.notest1.model.repository.NoteRepository
+import com.ibrohimapk3.notest1.view.CallBack
+import com.ibrohimapk3.notest1.view.ItemsData
+import com.ibrohimapk3.notest1.view.MyAdapter
+import com.ibrohimapk3.notest1.viewModel.AddItemViewModel
+import com.ibrohimapk3.notest1.viewModel.MainFragmentViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [MainFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class MainFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
-
+class MainFragment : Fragment()  , CallBack{
+    private lateinit var viewModel: MainFragmentViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main, container, false)
+        var view = inflater.inflate(R.layout.fragment_main, container, false)
+        var dao = MainDb.createDb(requireContext()).getDao()
+        var repository = NoteRepository(dao)
+        var adapter = MyAdapter(this)
+        viewModel = MainFragmentViewModel(repository)
+        var imgButton = view.findViewById<ImageButton>(R.id.btn_add)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+        imgButton.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_addItemFragment)
+        }
+        var list = mutableListOf<ItemsData>()
+
+        viewModel.getAllItems().observe(viewLifecycleOwner) {it->
+            list.clear()
+            for(i in it){
+                list.add(ItemsData(i.title.toString() , i.content ))
+            }
+            adapter.setData(list)
+        }
+        recyclerView.adapter = adapter
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MainFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MainFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onItemClick(itemsData: ItemsData) {
+
+        val bundle = Bundle().apply {
+            putString("title", itemsData.title)
+            putString("content", itemsData.contain)
+        }
+
+        findNavController().navigate(R.id.action_mainFragment_to_infoAboutItemFragment , bundle)
+    }
+
+    override fun deleteItem(title: String) {
+        viewModel.deleteItem(title)
     }
 }
